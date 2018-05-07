@@ -1,0 +1,46 @@
+
+<body>
+{{> title}}
+{{> canvas}}
+{{> login}}
+</body>
+
+<template name="title">
+    {{#if isAdmin}}
+    <h1>Talented Happiness Map - admin <button id="reset" class="reset">reset</button><button id="reset-all" class="reset">reset all</button></h1>
+    {{else}}
+    <h1>Talented Happiness Map{{#if name}} - {{name}}{{/if}} <button id="reset" class="reset">reset</button></h1>
+    {{/if}}
+</template>
+
+<template name="login">
+    <div id="login-overlay" class="login-overlay" style="display: none;">
+        <form id="login" class="login">
+            <h1>Save Your Name</h1>
+            <input id="name" name="name" type="text" placeholder="Name..." />
+            <input type="submit" value="Save" />
+        </form>
+    </div>
+</template>
+
+<template name="canvas">
+    <div id="canvas" class="canvas">
+        <div class="arrow arrow-vertical"></div>
+        <div class="arrow arrow-horizontal"></div>
+        <span class="mood happy">HAPPY</span>
+        <span class="mood unhappy">UNHAPPY</span>
+        <span class="mood notbusy">NOT BUSY</span>
+        <span class="mood busy">BUSY</span>
+        {{#each statuses}}
+            {{> status}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="status">
+    <span style="top: {{y}}%; left: {{x}}%" class="status">{{name}}</span>
+</template>
+
+<template name="admin">
+
+</template>
