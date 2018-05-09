@@ -95,7 +95,11 @@ Template.login.onRendered(function () {
 Template.login.events({
   'submit #login': function (event) {
     event.preventDefault();
-    setName($('#name').val().trim());
+    const name = $('#name').val().trim();
+    if (!name) {
+      return;
+    }
+    setName(name);
     toggleOverlay();
   }
 });
