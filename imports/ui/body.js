@@ -46,7 +46,7 @@ Template.canvas.helpers({
 });
 
 Template.canvas.events({
-  'click #canvas': function (event, template) {
+  'click, touchstart #canvas': function (event, template) {
     const canvasRects = template.find('#canvas').getClientRects()[0];
     const mouseXOnCanvas = event.clientX - canvasRects.left;
     const mouseYOnCanvas = event.clientY - canvasRects.top;
