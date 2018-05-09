@@ -38,6 +38,14 @@ function calculatePercentage (which, from) {
   return Math.round((which - STATUS_SIZE_PX_MARGIN) / from * 100 );
 }
 
+function handleClick (x, y, template) {
+  const canvasRects = template.find('#canvas').getClientRects()[0];
+  const mouseXOnCanvas = x - canvasRects.left;
+  const mouseYOnCanvas = y - canvasRects.top;
+  const percentageOnCanvasX = calculatePercentage(mouseXOnCanvas, canvasRects.width);
+  const percentageOnCanvasY = calculatePercentage(mouseYOnCanvas, canvasRects.height);
+  insertOrUpdateStatus(percentageOnCanvasX, percentageOnCanvasY);
+}
 
 Template.canvas.helpers({
   statuses() {
@@ -46,13 +54,15 @@ Template.canvas.helpers({
 });
 
 Template.canvas.events({
-  'click, touchstart #canvas': function (event, template) {
-    const canvasRects = template.find('#canvas').getClientRects()[0];
-    const mouseXOnCanvas = event.clientX - canvasRects.left;
-    const mouseYOnCanvas = event.clientY - canvasRects.top;
-    const percentageOnCanvasX = calculatePercentage(mouseXOnCanvas, canvasRects.width);
-    const percentageOnCanvasY = calculatePercentage(mouseYOnCanvas, canvasRects.height);
-    insertOrUpdateStatus(percentageOnCanvasX, percentageOnCanvasY);
+  'click #canvas': function (event, template) {
+    const clickX = event.clientX;
+    const clickY = event.clientY;
+    handleClick(clickX, clickY, template);
+  },
+  'touchstart #canvas': function (event, template) {
+    const touchX = event.originalEvent.touches[0].clientX;
+    const touchY = event.originalEvent.touches[0].clientY;
+    handleClick(touchX, touchY, template);
   }
 });
 
