@@ -95,7 +95,7 @@ Template.login.onRendered(function () {
 Template.login.events({
   'submit #login': function (event) {
     event.preventDefault();
-    const name = $('#name').val().trim();
+    const name = $('#name').val().trim().toLowerCase();
     if (!name) {
       return;
     }
