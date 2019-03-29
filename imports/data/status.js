@@ -21,5 +21,8 @@ Meteor.methods({
   },
   'statuses.removeAll'() {
     Statuses.remove({});
+  },
+  'statuses.removeSingle'({ name }) {
+    Statuses.remove({ name });
   }
 });

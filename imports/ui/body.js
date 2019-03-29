@@ -1,19 +1,22 @@
 import { Template } from 'meteor/templating';
-import { Session } from 'meteor/session'
 import { LOCALSTORAGE_KEY, STATUS_SIZE_PX_MARGIN } from '../constants';
 import { Statuses} from "../data/status";
 import './body.html';
 
+const localStorage = window.localStorage;
+const isAdmin = window.location.pathname.startsWith('/admin');
+const showAll = window.location.pathname.startsWith('/all');
+
 function getName () {
-  return Session.get(LOCALSTORAGE_KEY);
+  return localStorage.getItem(LOCALSTORAGE_KEY);
 }
 
 function setName (name) {
-  Session.set(LOCALSTORAGE_KEY, name);
+  name && localStorage.setItem(LOCALSTORAGE_KEY, name);
 }
 
 function removeName () {
-  Session.set(LOCALSTORAGE_KEY, null);
+  localStorage.setItem(LOCALSTORAGE_KEY, null);
 }
 
 function toggleOverlay () {
@@ -34,6 +37,10 @@ function removeAllStatuses () {
   Meteor.call('statuses.removeAll');
 }
 
+function removeSingleStatus(name) {
+  Meteor.call('statuses.removeSingle', { name });
+}
+
 function calculatePercentage (which, from) {
   return Math.round((which - STATUS_SIZE_PX_MARGIN) / from * 100 );
 }
@@ -44,12 +51,20 @@ function handleClick (x, y, template) {
   const mouseYOnCanvas = y - canvasRects.top;
   const percentageOnCanvasX = calculatePercentage(mouseXOnCanvas, canvasRects.width);
   const percentageOnCanvasY = calculatePercentage(mouseYOnCanvas, canvasRects.height);
-  insertOrUpdateStatus(percentageOnCanvasX, percentageOnCanvasY);
+  insertOrUpdateStatus(percentageOnCanvasX, 100 - percentageOnCanvasY);
 }
 
 Template.canvas.helpers({
   statuses() {
-    return Statuses.find({});
+    const name = getName();
+    const acc = [];
+    Statuses.find({}).map(cur => {
+      if (showAll || isAdmin || name === cur.name) {
+        cur.y = 100 - cur.y;
+        acc.push(cur);
+      }
+    });
+    return acc
   }
 });
 
@@ -72,12 +87,14 @@ Template.title.helpers({
     return getName()
   },
   isAdmin() {
-    return getName() === 'admin';
+    return isAdmin;
   }
 });
 
 Template.title.events({
   'click #reset': function () {
+    const name = getName();
+    removeSingleStatus(name);
     removeName();
     toggleOverlay();
   },
