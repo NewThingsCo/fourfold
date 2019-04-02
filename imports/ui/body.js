@@ -100,6 +100,17 @@ Template.title.events({
   },
   'click #reset-all': function () {
     removeAllStatuses();
+  },
+  'click #export-all': function() {
+    Meteor.call('sheetsExport', { fromClick: true }, (error, result) => {
+      if (error) {
+        console.error(error, result);
+        alert('Something went terribly wrong');
+        return;
+      }
+      console.log(result);
+      alert('Google sheet updated with last months data!')
+    });
   }
 });
 

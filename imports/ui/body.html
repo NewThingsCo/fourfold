@@ -7,7 +7,10 @@
 
 <template name="title">
     {{#if isAdmin}}
-    <h1>NewThings Happiness - admin <button id="reset" class="reset">reset</button><button id="reset-all" class="reset">reset all</button></h1>
+    <h1>NewThings Happiness - admin <button id="reset" class="reset">reset</button>
+        <button id="reset-all" class="reset">reset all</button>
+        <button id="export-all" class="reset">Sheets export</button>
+    </h1>
     {{else}}
     <h1>NewThings Happiness {{#if name}} - {{name}}{{/if}} <button id="reset" class="reset">reset</button></h1>
     {{/if}}
@@ -27,10 +30,10 @@
     <div id="canvas" class="canvas">
         <div class="arrow arrow-vertical"></div>
         <div class="arrow arrow-horizontal"></div>
-        <span class="mood happy">HAPPY @ PROJECT</span>
-        <span class="mood unhappy">UNHAPPY @ PROJECT</span>
-        <span class="mood notbusy">HAPPY @ COMPANY</span>
-        <span class="mood busy">UNHAPPY @ COMPANY</span>
+        <span class="mood happy">LEARNING</span>
+        <span class="mood unhappy">NOT LEARNING</span>
+        <span class="mood notbusy">HAPPY</span>
+        <span class="mood busy">UNHAPPY</span>
         {{#each statuses}}
             {{> status}}
         {{/each}}
