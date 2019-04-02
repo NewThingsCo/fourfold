@@ -31,7 +31,7 @@ const params = {
 
 async function updateSheet() {
   try {
-    console.log('starting')
+    console.log('Exporting to Sheets')
     const statuses = Statuses.find({})
     const sheet = await sheetGet(params)
     const {data: {values}} = sheet
@@ -44,7 +44,7 @@ async function updateSheet() {
     const keys = values.map(row => row[0])
 
     statuses.map(({name, x, y}) => {
-      let idx = keys.findIndex(cur => cur.startsWith(name + '-'))
+      let idx = keys.findIndex(cur => cur.toLowerCase().startsWith(name.toLowerCase() + '-'))
       if (idx === -1) {
         idx = keys.length
         keys.push(name + '-x')
