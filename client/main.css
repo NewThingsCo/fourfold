@@ -36,6 +36,12 @@ body {
     width: 80vw;
     background-color: #f8f8f8;
     position: relative;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .login-overlay {
@@ -129,6 +135,14 @@ input[type=submit] {
     line-height: 60px;
     font-size: 14px;
     opacity: 0.7;
+}
+
+.previous {
+    opacity: 0.4;
+}
+
+.statusArrow {
+    opacity: 0.4;
 }
 
 .arrow {

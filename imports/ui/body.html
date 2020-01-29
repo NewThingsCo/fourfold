@@ -1,47 +1,72 @@
-
 <body>
-{{> title}}
-{{> canvas}}
-{{> login}}
+  {{> title}}
+  {{> canvas}}
+  {{> login}}
 </body>
 
 <template name="title">
-    {{#if isAdmin}}
-    <h1>NewThings Happiness - admin <button id="reset" class="reset">reset</button>
-        <button id="reset-all" class="reset">reset all</button>
-        <button id="export-all" class="reset">Sheets export</button>
+  {{#if isAdmin}}
+    <h1>NewThings Happiness - admin
+      <button id="reset" class="reset">reset</button>
+      <button id="export-all" class="reset">Sheets export</button>
     </h1>
-    {{else}}
-    <h1>NewThings Happiness {{#if name}} - {{name}}{{/if}} <button id="reset" class="reset">reset</button></h1>
-    {{/if}}
+  {{else}}
+    <h1>NewThings Happiness {{#if name}} - {{name}}{{/if}}
+      <button id="reset" class="reset">reset</button>
+    </h1>
+  {{/if}}
 </template>
 
 <template name="login">
-    <div id="login-overlay" class="login-overlay" style="display: none;">
-        <form id="login" class="login">
-            <h1>Save Your Name</h1>
-            <input id="name" name="name" type="text" placeholder="Name..." />
-            <input type="submit" value="Save" />
-        </form>
-    </div>
+  <div id="login-overlay" class="login-overlay" style="display: none;">
+    <form id="login" class="login">
+      <h1>Save Your Name</h1>
+      <input id="name" name="name" type="text" placeholder="Name..." />
+      <input type="submit" value="Save" />
+    </form>
+  </div>
 </template>
 
 <template name="canvas">
-    <div id="canvas" class="canvas">
-        <div class="arrow arrow-vertical"></div>
-        <div class="arrow arrow-horizontal"></div>
-        <span class="mood happy">LEARNING</span>
-        <span class="mood unhappy">NOT LEARNING</span>
-        <span class="mood notbusy">HAPPY</span>
-        <span class="mood busy">UNHAPPY</span>
-        {{#each statuses}}
-            {{> status}}
+  <div id="canvas" class="canvas">
+    <div class="arrow arrow-vertical"></div>
+    <div class="arrow arrow-horizontal"></div>
+    <span class="mood happy">LEARNING</span>
+    <span class="mood unhappy">NOT LEARNING</span>
+    <span class="mood notbusy">HAPPY</span>
+    <span class="mood busy">UNHAPPY</span>
+
+    {{#if Template.subscriptionsReady}}
+      {{#each item in statuses}}
+        {{> status item=item canvasWidth=canvasWidth canvasHeight=canvasHeight}}
+      {{/each}}
+
+      <svg height="100%" width="100%" style="position: absolute;" data-name="{{name}}">
+        <defs>
+          <marker id="arrowEndMarker" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto">
+            <path d="M2,2 L2,10 L10,6 L2,2" style="fill: #000000;" />
+          </marker>
+        </defs>
+
+        {{#each item in statuses}}
+          {{> statusArrow item=item canvasWidth=canvasWidth canvasHeight=canvasHeight}}
         {{/each}}
-    </div>
+      </svg>
+    {{/if}}
+  </div>
 </template>
 
 <template name="status">
-    <span style="top: {{y}}%; left: {{x}}%" class="status">{{name}}</span>
+  <span style="top: {{getY}}px; left: {{getX}}px;{{#unless item.y }} display: none;{{/unless}}" class="status">{{item.name}}</span>
+  <span style="top: {{getPrevY}}px; left: {{getPrevX}}px;{{#unless item.prevY }} display: none;{{/unless}}" class="status previous">{{item.name}}</span>
+</template>
+
+<template name="statusArrow">
+  {{#if shouldDraw}}
+    {{#let coords=getLineCoordinates}}
+      <line x1="{{coords.x1}}" y1="{{coords.y1}}" x2="{{coords.x2}}" y2="{{coords.y2}}" class="statusArrow" style="stroke: #000; stroke-width: 2; marker-end: url(#arrowEndMarker)" />
+    {{/let}}
+  {{/if}}
 </template>
 
 <template name="admin">
